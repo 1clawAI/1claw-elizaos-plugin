@@ -9,6 +9,8 @@ API_URL="${ONECLAW_BASE_URL:-https://api.1claw.xyz}"
 API_URL="${API_URL%/}"
 STAMP="$(date +%s)"
 OUT="${ROOT}/.env.elizaos.test-${STAMP}"
+cleanup() { rm -f "${OUT}"; }
+trap cleanup EXIT
 
 if [[ -f "${REPO_ROOT}/.env" ]]; then
   set -a
@@ -67,5 +69,4 @@ source "${OUT}"
 set +a
 bash scripts/validate-setup.sh
 
-rm -f "${OUT}"
 echo "PASS: bootstrap + validate"
