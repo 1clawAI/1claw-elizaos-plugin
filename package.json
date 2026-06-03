@@ -22,6 +22,8 @@
     "dev": "tsc --watch",
     "test": "vitest run",
     "test:watch": "vitest",
+    "bootstrap": "tsx scripts/bootstrap.ts",
+    "validate": "bash scripts/validate-setup.sh",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -87,6 +89,7 @@
   "devDependencies": {
     "@elizaos/core": "^1.0.0",
     "@types/node": "^20.19.0",
+    "tsx": "^4.19.0",
     "typescript": "^5.5.0",
     "vitest": "^4.1.0"
   },

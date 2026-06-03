@@ -30,6 +30,46 @@ Add to your character's plugins:
 
 That's it. The plugin will authenticate with 1Claw on boot, discover the agent's vault, and inject available secret paths and signing keys into the agent's context.
 
+## Bootstrap (first-time setup)
+
+Use a **human** API key (`1ck_...` from [1claw.xyz/dashboard](https://1claw.xyz/dashboard) → API Keys) **only** to create a vault, agent, and access policy. The script never writes the human key to disk — only the one-time **agent** key (`ocv_...`) is saved.
+
+```bash
+git clone https://github.com/1clawAI/1claw-elizaos-plugin.git
+cd 1claw-elizaos-plugin
+npm install
+
+# Provision vault + agent + policy (human key used once, in memory only)
+ONECLAW_HUMAN_API_KEY=1ck_your_key_here npm run bootstrap
+
+# Optional: enable Intents API signing at create time
+ONECLAW_HUMAN_API_KEY=1ck_... ONECLAW_ENABLE_INTENTS=true npm run bootstrap
+```
+
+**Outputs:**
+
+- `.env.elizaos` — agent-only env vars (`ONECLAW_AGENT_API_KEY`, `ONECLAW_AGENT_ID`, `ONECLAW_VAULT_ID`)
+- Terminal — one-time `ocv_...` key and a character JSON snippet
+
+**Environment variables (bootstrap):**
+
+| Variable | Default | Description |
+|---|---|---|
+| `ONECLAW_HUMAN_API_KEY` | (prompt) | Human key `1ck_...` — **setup only**, not stored |
+| `ONECLAW_AGENT_NAME` | `elizaos-agent` | Agent display name |
+| `ONECLAW_VAULT_NAME` | `elizaos-vault` | Vault name |
+| `ONECLAW_POLICY_PATH` | `**` | Glob for granted secret paths |
+| `ONECLAW_ENABLE_INTENTS` | `false` | Set `true` to enable transaction signing |
+| `ONECLAW_OUTPUT_FILE` | `.env.elizaos` | Where to write agent credentials |
+| `ONECLAW_BASE_URL` | `https://api.1claw.xyz` | API base URL |
+
+Validate agent credentials after bootstrap:
+
+```bash
+export $(grep -v '^#' .env.elizaos | xargs)
+npm run validate
+```
+
 ## Configuration
 
 | Variable | Required | Default | Description |
@@ -83,6 +123,7 @@ cd 1claw-elizaos-plugin
 npm install
 npm run build
 npm test
+chmod +x scripts/bootstrap.sh scripts/validate-setup.sh
 ```
 
 ## Roadmap (out of scope for v0.1)
