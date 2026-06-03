@@ -1,6 +1,6 @@
 {
   "name": "@1claw/plugin-elizaos",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "1Claw vault + Intents signing for elizaOS agents — HSM-backed secrets, EVM/Solana/BTC/XRP/Cardano/Tron signing, optional Shroud TEE LLM proxy.",
   "type": "module",
   "main": "dist/index.js",
@@ -24,6 +24,7 @@
     "test:watch": "vitest",
     "bootstrap": "tsx scripts/bootstrap.ts",
     "validate": "bash scripts/validate-setup.sh",
+    "test:integration": "bash scripts/test-bootstrap-integration.sh",
     "prepublishOnly": "npm run build"
   },
   "keywords": [

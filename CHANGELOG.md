@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1 — 2026-06-03
+
+- Bootstrap script (`npm run bootstrap`) — human `1ck_` key provisions vault, agent, and policy; writes agent-only `.env.elizaos`
+- `npm run validate` — smoke test with `ocv_` agent key
+- `npm run test:integration` — live end-to-end bootstrap + validate (CI-friendly skip without creds)
+
 ## 0.1.0 — 2026-06-03
 
 Initial release.

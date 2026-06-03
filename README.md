@@ -14,6 +14,8 @@ bun add @1claw/plugin-elizaos
 
 ## Quick Start
 
+**New to 1Claw?** Run [bootstrap](#bootstrap-first-time-setup) first to create a vault, agent, and policy with a human `1ck_` key, then use the generated `ocv_` key below.
+
 Add to your character's plugins:
 
 ```json
@@ -28,7 +30,7 @@ Add to your character's plugins:
 }
 ```
 
-That's it. The plugin will authenticate with 1Claw on boot, discover the agent's vault, and inject available secret paths and signing keys into the agent's context.
+The plugin authenticates on boot, discovers the agent's vault, and injects secret paths and signing keys into context each turn.
 
 ## Bootstrap (first-time setup)
 
@@ -123,7 +125,10 @@ cd 1claw-elizaos-plugin
 npm install
 npm run build
 npm test
-chmod +x scripts/bootstrap.sh scripts/validate-setup.sh
+chmod +x scripts/*.sh
+
+# Live bootstrap test (needs ONECLAW_HUMAN_API_KEY or ADMIN_EMAIL+ADMIN_PASSWORD in repo root .env)
+npm run test:integration
 ```
 
 ## Roadmap (out of scope for v0.1)
@@ -136,10 +141,12 @@ chmod +x scripts/bootstrap.sh scripts/validate-setup.sh
 ## Links
 
 - [1Claw Platform](https://1claw.xyz)
+- [Documentation — elizaOS guide](https://docs.1claw.xyz/docs/guides/elizaos)
 - [Integration Guide](https://1claw.xyz/for-ai)
+- [Ecosystem](https://1claw.xyz/ecosystem)
 - [Shroud TEE Proxy](https://1claw.xyz/shroud)
 - [Intents API](https://1claw.xyz/intents)
-- [Documentation](https://docs.1claw.xyz)
+- [@1claw/plugin-elizaos on npm](https://www.npmjs.com/package/@1claw/plugin-elizaos)
 - [@1claw/sdk on npm](https://www.npmjs.com/package/@1claw/sdk)
 
 ## License
