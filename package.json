@@ -1,0 +1,96 @@
+{
+  "name": "@1claw/plugin-elizaos",
+  "version": "0.1.0",
+  "description": "1Claw vault + Intents signing for elizaOS agents — HSM-backed secrets, EVM/Solana/BTC/XRP/Cardano/Tron signing, optional Shroud TEE LLM proxy.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "images",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "elizaos",
+    "elizaos-plugin",
+    "elizaos-plugins",
+    "1claw",
+    "secrets",
+    "vault",
+    "signing",
+    "intents",
+    "shroud",
+    "mpc",
+    "hsm"
+  ],
+  "agentConfig": {
+    "pluginType": "elizaos:plugin:1.0.0",
+    "pluginParameters": {
+      "ONECLAW_AGENT_API_KEY": {
+        "type": "string",
+        "required": true,
+        "sensitive": true,
+        "description": "Agent API key from 1claw.xyz dashboard, format ocv_..."
+      },
+      "ONECLAW_AGENT_ID": {
+        "type": "string",
+        "required": false,
+        "description": "Override auto-discovery (rarely needed for keys created after prefix rollout)"
+      },
+      "ONECLAW_VAULT_ID": {
+        "type": "string",
+        "required": false,
+        "description": "Default vault for unscoped reads/writes"
+      },
+      "ONECLAW_BASE_URL": {
+        "type": "string",
+        "required": false,
+        "default": "https://api.1claw.xyz"
+      },
+      "ONECLAW_USE_SHROUD": {
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Route signing/LLM through shroud.1claw.xyz instead of api.1claw.xyz"
+      }
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1clawAI/1claw-elizaos-plugin.git"
+  },
+  "homepage": "https://1claw.xyz",
+  "license": "MIT",
+  "dependencies": {
+    "@1claw/sdk": "^0.31.0"
+  },
+  "peerDependencies": {
+    "@elizaos/core": ">=1.0.0"
+  },
+  "devDependencies": {
+    "@elizaos/core": "^1.0.0",
+    "@types/node": "^20.19.0",
+    "typescript": "^5.5.0",
+    "vitest": "^4.1.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
