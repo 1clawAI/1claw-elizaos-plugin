@@ -256,15 +256,15 @@ export class OneClawService extends Service {
     }
   }
 
-  async getAgentProfile(): Promise<{ tx_spent_today_eth?: string; tx_daily_limit_eth?: string }> {
+  async getAgentProfile(): Promise<{ tx_spent_today?: string; tx_daily_limit?: string }> {
     const agentId = this.getAgentId();
     if (!agentId) return {};
     try {
       const res = await this.client.agents.get(agentId);
       const d = res.data as any;
       return {
-        tx_spent_today_eth: d?.tx_spent_today_eth,
-        tx_daily_limit_eth: d?.tx_daily_limit_eth,
+        tx_spent_today: d?.tx_spent_today ?? d?.tx_spent_today_eth,
+        tx_daily_limit: d?.tx_daily_limit ?? d?.tx_daily_limit_eth,
       };
     } catch {
       return {};

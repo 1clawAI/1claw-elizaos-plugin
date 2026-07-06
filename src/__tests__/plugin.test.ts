@@ -152,8 +152,8 @@ describe("oneClawContextProvider", () => {
         { chain: "ethereum", address: "0x1234abcd5678efgh", is_active: true },
       ]),
       getAgentProfile: vi.fn().mockResolvedValue({
-        tx_spent_today_eth: "0.05",
-        tx_daily_limit_eth: "1.00",
+        tx_spent_today: "0.05",
+        tx_daily_limit: "1.00",
       }),
     };
 

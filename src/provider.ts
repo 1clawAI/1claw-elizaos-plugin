@@ -51,8 +51,8 @@ export const oneClawContextProvider: Provider = {
 
     try {
       const profile = await service.getAgentProfile();
-      if (profile.tx_daily_limit_eth) {
-        spendInfo = `Daily spend: ${profile.tx_spent_today_eth ?? "0"} / ${profile.tx_daily_limit_eth} ETH`;
+      if (profile.tx_daily_limit) {
+        spendInfo = `Daily spend: ${profile.tx_spent_today ?? "0"} / ${profile.tx_daily_limit} ETH`;
         parts.push(spendInfo);
       }
     } catch {
