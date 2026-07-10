@@ -1,6 +1,6 @@
 {
   "name": "@1claw/plugin-elizaos",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "1Claw vault + Intents signing for elizaOS agents — HSM-backed secrets, EVM/Solana/BTC/XRP/Cardano/Tron signing, optional Shroud TEE LLM proxy.",
   "type": "module",
   "main": "dist/index.js",

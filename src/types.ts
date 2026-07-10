@@ -62,6 +62,31 @@ export interface SignTypedDataRequest {
   signing_key_path?: string;
 }
 
+export interface ExecuteHttpRequest {
+  binding: string;
+  method?: string;
+  path?: string;
+  headers?: Record<string, string>;
+  body?: Record<string, unknown>;
+  execution_mode?: "vault" | "tee";
+}
+
+export interface ExecuteHttpResult {
+  status_code: number;
+  headers?: Record<string, string>;
+  body?: unknown;
+  [key: string]: unknown;
+}
+
+export interface BindingEntry {
+  id: string;
+  name: string;
+  binding_type: string;
+  base_url?: string;
+  is_active: boolean;
+  [key: string]: unknown;
+}
+
 export class OneClawAuthError extends Error {
   constructor(message: string) {
     super(message);

@@ -10,12 +10,14 @@ import {
   simulateTransactionAction,
   submitTransactionAction,
   listSigningKeysAction,
+  executeHttpAction,
+  listBindingsAction,
 } from "./actions";
 
 export const oneClawPlugin: Plugin = {
   name: "1claw",
   description:
-    "HSM-backed secrets and multi-chain signing for elizaOS agents via 1Claw.",
+    "HSM-backed secrets, multi-chain signing, and execution intents for elizaOS agents via 1Claw.",
   services: [OneClawService as any],
   providers: [oneClawContextProvider],
   actions: [
@@ -27,6 +29,8 @@ export const oneClawPlugin: Plugin = {
     simulateTransactionAction,
     submitTransactionAction,
     listSigningKeysAction,
+    executeHttpAction,
+    listBindingsAction,
   ],
 };
 

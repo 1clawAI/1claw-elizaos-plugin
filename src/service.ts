@@ -9,6 +9,9 @@ import type {
   TransactionResult,
   SignMessageRequest,
   SignTypedDataRequest,
+  ExecuteHttpRequest,
+  ExecuteHttpResult,
+  BindingEntry,
 } from "./types";
 import {
   OneClawAuthError,
@@ -250,6 +253,59 @@ export class OneClawService extends Service {
         public_key: k.public_key,
         address: k.address,
         is_active: k.is_active,
+      }));
+    } catch (err) {
+      this.translateError(err);
+    }
+  }
+
+  async executeHttp(req: ExecuteHttpRequest): Promise<ExecuteHttpResult> {
+    const agentId = this.getAgentId();
+    if (!agentId) throw new OneClawAuthError("Agent ID not resolved");
+    try {
+      const res = await (this.client as any).http.request(
+        "POST",
+        `/v1/agents/${agentId}/execute`,
+        {
+          body: {
+            binding: req.binding,
+            intent_type: "http",
+            execution_mode: req.execution_mode ?? "vault",
+            params: {
+              method: req.method ?? "GET",
+              path: req.path ?? "",
+              headers: req.headers,
+              body: req.body,
+            },
+          },
+        },
+      );
+      const d = res.data ?? res;
+      return {
+        status_code: d?.status_code ?? d?.statusCode ?? 200,
+        headers: d?.headers,
+        body: d?.body,
+      };
+    } catch (err) {
+      this.translateError(err);
+    }
+  }
+
+  async listBindings(): Promise<BindingEntry[]> {
+    const agentId = this.getAgentId();
+    if (!agentId) throw new OneClawAuthError("Agent ID not resolved");
+    try {
+      const res = await (this.client as any).http.request(
+        "GET",
+        `/v1/agents/${agentId}/bindings`,
+      );
+      const d = res.data ?? res;
+      return (d?.bindings ?? []).map((b: any) => ({
+        id: b.id,
+        name: b.name,
+        binding_type: b.binding_type,
+        base_url: b.base_url,
+        is_active: b.is_active ?? true,
       }));
     } catch (err) {
       this.translateError(err);

@@ -6,3 +6,5 @@ export { signTypedDataAction } from "./signTypedData";
 export { simulateTransactionAction } from "./simulateTransaction";
 export { submitTransactionAction } from "./submitTransaction";
 export { listSigningKeysAction } from "./listSigningKeys";
+export { executeHttpAction } from "./executeHttp";
+export { listBindingsAction } from "./listBindings";

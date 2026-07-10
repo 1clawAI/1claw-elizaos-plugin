@@ -94,6 +94,8 @@ npm run validate
 | `SIMULATE_TRANSACTION` | Tenderly dry-run before broadcasting. |
 | `SUBMIT_TRANSACTION` | Sign + broadcast EVM transactions with server-side guardrails. |
 | `LIST_SIGNING_KEYS` | Show provisioned chains and public addresses. |
+| `EXECUTE_HTTP` | Execute an HTTP request through a pre-configured binding (Pro+, requires `execution_intents_enabled`). |
+| `LIST_BINDINGS` | List available bindings (credential handles for external services). |
 
 ## Security Model
 
@@ -131,7 +133,25 @@ chmod +x scripts/*.sh
 npm run test:integration
 ```
 
-## Roadmap (out of scope for v0.1)
+## Execution Intents (v0.2)
+
+Execution Intents let agents make HTTP calls to external services through pre-configured **bindings**. Credentials are stored server-side and never exposed to the agent.
+
+**Requirements:** `execution_intents_enabled` must be toggled on for the agent, and the org needs a Pro+ subscription.
+
+```json
+{
+  "execution": {
+    "binding": "github-api",
+    "method": "GET",
+    "path": "/user/repos"
+  }
+}
+```
+
+Bindings are created by humans via the dashboard or SDK — agents can only list and use them.
+
+## Roadmap
 
 - Treasury wallet actions (delegated-treasury flow)
 - Platform API actions (multi-tenant provisioning)
