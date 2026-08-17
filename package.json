@@ -1,6 +1,6 @@
 {
   "name": "@1claw/plugin-elizaos",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "1Claw vault + Intents signing for elizaOS agents — HSM-backed secrets, EVM/Solana/BTC/XRP/Cardano/Tron signing, optional Shroud TEE LLM proxy.",
   "type": "module",
   "main": "dist/index.js",
@@ -82,7 +82,7 @@
   "homepage": "https://1claw.xyz",
   "license": "MIT",
   "dependencies": {
-    "@1claw/sdk": "^0.43.2"
+    "@1claw/sdk": "^0.48.0"
   },
   "peerDependencies": {
     "@elizaos/core": ">=1.0.0"
