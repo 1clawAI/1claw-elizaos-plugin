@@ -82,7 +82,7 @@
   "homepage": "https://1claw.xyz",
   "license": "MIT",
   "dependencies": {
-    "@1claw/sdk": "^0.49.0"
+    "@1claw/sdk": "^0.51.0"
   },
   "peerDependencies": {
     "@elizaos/core": ">=1.0.0"
