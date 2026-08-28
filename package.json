@@ -47,7 +47,7 @@
         "type": "string",
         "required": true,
         "sensitive": true,
-        "description": "Agent API key from 1claw.xyz dashboard, format ocv_..."
+        "description": "Agent API key from 1claw.co dashboard, format ocv_..."
       },
       "ONECLAW_AGENT_ID": {
         "type": "string",
@@ -62,13 +62,13 @@
       "ONECLAW_BASE_URL": {
         "type": "string",
         "required": false,
-        "default": "https://api.1claw.xyz"
+        "default": "https://api.1claw.co"
       },
       "ONECLAW_USE_SHROUD": {
         "type": "boolean",
         "required": false,
         "default": false,
-        "description": "Route signing/LLM through shroud.1claw.xyz instead of api.1claw.xyz"
+        "description": "Route signing/LLM through shroud.1claw.co instead of api.1claw.co"
       }
     }
   },
@@ -79,7 +79,7 @@
     "type": "git",
     "url": "https://github.com/1clawAI/1claw-elizaos-plugin.git"
   },
-  "homepage": "https://1claw.xyz",
+  "homepage": "https://1claw.co",
   "license": "MIT",
   "dependencies": {
     "@1claw/sdk": "^0.51.0"

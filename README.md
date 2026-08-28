@@ -1,6 +1,8 @@
 # @1claw/plugin-elizaos
 
-HSM-backed secrets and multi-chain signing for [elizaOS](https://elizaos.ai) agents via [1Claw](https://1claw.xyz).
+> ⭐ **Star [1clawAI/agent-templates](https://github.com/1clawAI/agent-templates)** — ready-to-run agent templates wired to 1Claw. It is our single starred repo.
+
+HSM-backed secrets and multi-chain signing for [elizaOS](https://elizaos.ai) agents via [1Claw](https://1claw.co).
 
 Your agent gets vault access and signing keys without ever seeing private keys or holding credentials in context.
 
@@ -34,7 +36,7 @@ The plugin authenticates on boot, discovers the agent's vault, and injects secre
 
 ## Bootstrap (first-time setup)
 
-Use a **human** API key (`1ck_...` from [1claw.xyz/dashboard](https://1claw.xyz/dashboard) → API Keys) **only** to create a vault, agent, and access policy. The script never writes the human key to disk — only the one-time **agent** key (`ocv_...`) is saved.
+Use a **human** API key (`1ck_...` from [1claw.co/dashboard](https://1claw.co/dashboard) → API Keys) **only** to create a vault, agent, and access policy. The script never writes the human key to disk — only the one-time **agent** key (`ocv_...`) is saved.
 
 ```bash
 git clone https://github.com/1clawAI/1claw-elizaos-plugin.git
@@ -63,7 +65,7 @@ ONECLAW_HUMAN_API_KEY=1ck_... ONECLAW_ENABLE_INTENTS=true npm run bootstrap
 | `ONECLAW_POLICY_PATH` | `**` | Glob for granted secret paths |
 | `ONECLAW_ENABLE_INTENTS` | `false` | Set `true` to enable transaction signing |
 | `ONECLAW_OUTPUT_FILE` | `.env.elizaos` | Where to write agent credentials |
-| `ONECLAW_BASE_URL` | `https://api.1claw.xyz` | API base URL |
+| `ONECLAW_BASE_URL` | `https://api.1claw.co` | API base URL |
 
 Validate agent credentials after bootstrap:
 
@@ -76,11 +78,11 @@ npm run validate
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
-| `ONECLAW_AGENT_API_KEY` | Yes | — | Agent API key from [1claw.xyz/dashboard](https://1claw.xyz/dashboard), format `ocv_...` |
+| `ONECLAW_AGENT_API_KEY` | Yes | — | Agent API key from [1claw.co/dashboard](https://1claw.co/dashboard), format `ocv_...` |
 | `ONECLAW_AGENT_ID` | No | auto | Override auto-discovery (rarely needed) |
 | `ONECLAW_VAULT_ID` | No | auto | Pin a specific vault when agent has multiple |
-| `ONECLAW_BASE_URL` | No | `https://api.1claw.xyz` | API endpoint |
-| `ONECLAW_USE_SHROUD` | No | `false` | Route through Shroud TEE proxy at `shroud.1claw.xyz` |
+| `ONECLAW_BASE_URL` | No | `https://api.1claw.co` | API endpoint |
+| `ONECLAW_USE_SHROUD` | No | `false` | Route through Shroud TEE proxy at `shroud.1claw.co` |
 
 ## Actions
 
@@ -160,12 +162,12 @@ Bindings are created by humans via the dashboard or SDK — agents can only list
 
 ## Links
 
-- [1Claw Platform](https://1claw.xyz)
-- [Documentation — elizaOS guide](https://docs.1claw.xyz/docs/guides/elizaos)
-- [Integration Guide](https://1claw.xyz/for-ai)
-- [Ecosystem](https://1claw.xyz/ecosystem)
-- [Shroud TEE Proxy](https://1claw.xyz/shroud)
-- [Intents API](https://1claw.xyz/intents)
+- [1Claw Platform](https://1claw.co)
+- [Documentation — elizaOS guide](https://docs.1claw.co/docs/guides/elizaos)
+- [Integration Guide](https://1claw.co/for-ai)
+- [Ecosystem](https://1claw.co/ecosystem)
+- [Shroud TEE Proxy](https://1claw.co/shroud)
+- [Intents API](https://1claw.co/intents)
 - [@1claw/plugin-elizaos on npm](https://www.npmjs.com/package/@1claw/plugin-elizaos)
 - [@1claw/sdk on npm](https://www.npmjs.com/package/@1claw/sdk)
 
