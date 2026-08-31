@@ -14,7 +14,7 @@ import { existsSync, writeFileSync } from "node:fs";
 import { createInterface } from "node:readline";
 import { createClient } from "@1claw/sdk";
 
-const BASE_URL = process.env.ONECLAW_BASE_URL ?? "https://api.1claw.xyz";
+const BASE_URL = process.env.ONECLAW_BASE_URL ?? "https://api.1claw.co";
 const AGENT_NAME = process.env.ONECLAW_AGENT_NAME ?? "elizaos-agent";
 const VAULT_NAME = process.env.ONECLAW_VAULT_NAME ?? "elizaos-vault";
 const POLICY_PATH = process.env.ONECLAW_POLICY_PATH ?? "**";

@@ -5,7 +5,7 @@
 #   ONECLAW_AGENT_API_KEY=ocv_... ./scripts/validate-setup.sh
 set -euo pipefail
 
-BASE_URL="${ONECLAW_BASE_URL:-https://api.1claw.xyz}"
+BASE_URL="${ONECLAW_BASE_URL:-https://api.1claw.co}"
 API_KEY="${ONECLAW_AGENT_API_KEY:-}"
 
 pass() { printf 'OK   %s\n' "$1"; }

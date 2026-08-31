@@ -48,7 +48,7 @@ export class OneClawService extends Service {
     const apiKey = this.runtime.getSetting("ONECLAW_AGENT_API_KEY");
     if (!apiKey) {
       throw new OneClawAuthError(
-        "ONECLAW_AGENT_API_KEY is required. Get one at https://1claw.xyz/dashboard",
+        "ONECLAW_AGENT_API_KEY is required. Get one at https://1claw.co/dashboard",
       );
     }
 
@@ -58,8 +58,8 @@ export class OneClawService extends Service {
     const baseUrl = baseUrlSetting
       ? String(baseUrlSetting)
       : useShroud
-        ? "https://shroud.1claw.xyz"
-        : "https://api.1claw.xyz";
+        ? "https://shroud.1claw.co"
+        : "https://api.1claw.co";
 
     const agentIdSetting = this.runtime.getSetting("ONECLAW_AGENT_ID");
     const vaultIdSetting = this.runtime.getSetting("ONECLAW_VAULT_ID");

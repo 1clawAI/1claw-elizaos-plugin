@@ -5,7 +5,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 REPO_ROOT="$(cd "${ROOT}/../.." && pwd)"
-API_URL="${ONECLAW_BASE_URL:-https://api.1claw.xyz}"
+API_URL="${ONECLAW_BASE_URL:-https://api.1claw.co}"
 API_URL="${API_URL%/}"
 STAMP="$(date +%s)"
 OUT="${ROOT}/.env.elizaos.test-${STAMP}"
