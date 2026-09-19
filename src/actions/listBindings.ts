@@ -37,7 +37,7 @@ export const listBindingsAction: Action = {
       if (bindings.length === 0) {
         return {
           success: true,
-          text: "No bindings configured. A human can create them at 1claw.xyz/dashboard on the agent detail page.",
+          text: "No bindings configured. A human can create them at 1claw.co/dashboard on the agent detail page.",
         };
       }
 

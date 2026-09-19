@@ -37,7 +37,7 @@ export const listSigningKeysAction: Action = {
       if (keys.length === 0) {
         return {
           success: true,
-          text: "No signing keys provisioned. A human can create them at 1claw.xyz/dashboard.",
+          text: "No signing keys provisioned. A human can create them at 1claw.co/dashboard.",
         };
       }
 
