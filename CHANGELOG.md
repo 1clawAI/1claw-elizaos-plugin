@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.2.4 — 2026-10-19
+
+- Depend on `@1claw/sdk` ^0.62.0 (was ^0.51.0).
+- API errors now surface as `OneClawAuthError` / `OneClawPolicyDeniedError` /
+  `OneClawGuardrailError` / `OneClawNotFoundError`. The SDK returns
+  `{ data, error, meta }` rather than throwing, and the service read `data`
+  without checking `error`, so a 403 or 404 came back as an empty result or a
+  `TypeError`.
+- `LIST_SIGNING_KEYS` read `signing_keys`; the API answers `{ keys: [...] }`,
+  so the list was always empty.
+- The agent ID is resolved from the exchanged `ocv_` key when
+  `ONECLAW_AGENT_ID` is unset. It read a property the client does not have,
+  so signing and execute actions failed with "Agent ID not resolved".
+- `EXECUTE_HTTP` reads the upstream status, headers and body from the
+  execute response's `result`; it reported status 200 and no body before.
+  `LIST_BINDINGS` reads `base_url` from the binding's `config`.
+
 ## 0.1.1 — 2026-06-03
 
 - Bootstrap script (`npm run bootstrap`) — human `1ck_` key provisions vault, agent, and policy; writes agent-only `.env.elizaos`

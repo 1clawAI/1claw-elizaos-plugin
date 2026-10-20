@@ -34,6 +34,8 @@ vi.mock("@1claw/sdk", () => {
         get: mockGetAgent,
       };
       signingKeys = { list: mockListSigningKeys };
+      // The real client exposes the agent ID its ocv_ key exchanged for here.
+      http = { resolvedAgentId: "agent-from-key" };
       constructor(public config: any) {}
     },
   };
@@ -128,7 +130,7 @@ describe("OneClawService", () => {
   it("listSigningKeys returns active keys", async () => {
     mockListSigningKeys.mockResolvedValue({
       data: {
-        signing_keys: [
+        keys: [
           { chain: "ethereum", public_key: "0x...", address: "0xabc", is_active: true },
           { chain: "solana", public_key: "HZ7...", address: "HZ7abc", is_active: true },
         ],
@@ -139,6 +141,25 @@ describe("OneClawService", () => {
     const keys = await service.listSigningKeys();
     expect(keys).toHaveLength(2);
     expect(keys[0].chain).toBe("ethereum");
+  });
+
+  it("resolves the agent ID from the exchanged key when ONECLAW_AGENT_ID is unset", async () => {
+    const service = await OneClawService.start(makeRuntime());
+    expect(service.getAgentId()).toBe("agent-from-key");
+  });
+
+  it("turns an SDK error envelope into a typed error", async () => {
+    mockGetSecret.mockResolvedValue({
+      data: null,
+      error: { type: "not_found", message: "Secret not found" },
+      meta: { status: 404 },
+    });
+    const service = await OneClawService.start(makeRuntime());
+    await expect(service.getSecret("missing/key")).rejects.toThrow("Secret not found");
+    await expect(service.getSecret("missing/key")).rejects.toHaveProperty(
+      "name",
+      "OneClawNotFoundError",
+    );
   });
 });
 

@@ -1,5 +1,5 @@
 import { Service, type IAgentRuntime, logger } from "@elizaos/core";
-import { OneclawClient } from "@1claw/sdk";
+import { OneclawClient, type OneclawResponse } from "@1claw/sdk";
 import type {
   OneClawConfig,
   SecretEntry,
@@ -79,14 +79,15 @@ export class OneClawService extends Service {
     });
 
     try {
-      const vaults = await this.client.vault.list();
-      const vaultList = (vaults.data as any)?.vaults ?? [];
+      const vaults = this.unwrap(await this.client.vault.list());
+      const vaultList = (vaults as any)?.vaults ?? [];
       if (vaultList.length > 0 && !this.clawConfig.vaultId) {
         this.vaultId = vaultList[0].id;
       } else {
         this.vaultId = this.clawConfig.vaultId;
       }
-      this.agentId = this.clawConfig.agentId ?? (this.client as any).agentId;
+      // The agent ID the ocv_ key exchanged for; vault.list() above did the exchange.
+      this.agentId = this.clawConfig.agentId ?? this.client.http.resolvedAgentId;
       logger.info(
         `[1claw] Service started — vault=${this.vaultId ?? "auto"}, agent=${this.agentId ?? "auto"}`,
       );
@@ -114,12 +115,8 @@ export class OneClawService extends Service {
   ): Promise<{ value: string; type?: string; version?: number }> {
     const vid = vaultId ?? this.getVaultId();
     try {
-      const res = await this.client.secrets.get(vid, path);
-      return {
-        value: (res.data as any)!.value,
-        type: (res.data as any)!.type,
-        version: (res.data as any)!.version,
-      };
+      const d = this.unwrap(await this.client.secrets.get(vid, path)) as any;
+      return { value: d.value, type: d.type, version: d.version };
     } catch (err) {
       this.translateError(err);
     }
@@ -128,8 +125,8 @@ export class OneClawService extends Service {
   async listSecrets(prefix?: string, vaultId?: string): Promise<SecretEntry[]> {
     const vid = vaultId ?? this.getVaultId();
     try {
-      const res = await this.client.secrets.list(vid, prefix);
-      return ((res.data as any)?.secrets ?? []).map((s: any) => ({
+      const d = this.unwrap(await this.client.secrets.list(vid, prefix)) as any;
+      return (d?.secrets ?? []).map((s: any) => ({
         path: s.path,
         type: s.type,
         version: s.version,
@@ -148,11 +145,13 @@ export class OneClawService extends Service {
   ): Promise<{ version: number }> {
     const vid = vaultId ?? this.getVaultId();
     try {
-      const res = await this.client.secrets.set(vid, path, value, {
-        type: opts?.type,
-        expires_at: opts?.expires_at,
-      });
-      return { version: (res.data as any)!.version };
+      const d = this.unwrap(
+        await this.client.secrets.set(vid, path, value, {
+          type: opts?.type,
+          expires_at: opts?.expires_at,
+        }),
+      ) as any;
+      return { version: d.version };
     } catch (err) {
       this.translateError(err);
     }
@@ -170,10 +169,8 @@ export class OneClawService extends Service {
         message: req.message,
         signing_key_path: req.signing_key_path,
       } as any);
-      return {
-        signature: (res.data as any)?.signature ?? "",
-        from: (res.data as any)?.from,
-      };
+      const d = this.unwrap(res) as any;
+      return { signature: d?.signature ?? "", from: d?.from };
     } catch (err) {
       this.translateError(err);
     }
@@ -191,10 +188,8 @@ export class OneClawService extends Service {
         typed_data: req.typed_data,
         signing_key_path: req.signing_key_path,
       } as any);
-      return {
-        signature: (res.data as any)?.signature ?? "",
-        from: (res.data as any)?.from,
-      };
+      const d = this.unwrap(res) as any;
+      return { signature: d?.signature ?? "", from: d?.from };
     } catch (err) {
       this.translateError(err);
     }
@@ -204,8 +199,9 @@ export class OneClawService extends Service {
     const agentId = this.getAgentId();
     if (!agentId) throw new OneClawAuthError("Agent ID not resolved");
     try {
-      const res = await this.client.agents.simulateTransaction(agentId, tx as any);
-      const d = res.data as any;
+      const d = this.unwrap(
+        await this.client.agents.simulateTransaction(agentId, tx as any),
+      ) as any;
       return {
         simulation_id: d?.simulation_id,
         status: d?.status ?? "unknown",
@@ -226,12 +222,13 @@ export class OneClawService extends Service {
     const agentId = this.getAgentId();
     if (!agentId) throw new OneClawAuthError("Agent ID not resolved");
     try {
-      const res = await this.client.agents.submitTransaction(
-        agentId,
-        tx as any,
-        idempotencyKey ? { idempotencyKey } : undefined,
-      );
-      const d = res.data as any;
+      const d = this.unwrap(
+        await this.client.agents.submitTransaction(
+          agentId,
+          tx as any,
+          idempotencyKey ? { idempotencyKey } : undefined,
+        ),
+      ) as any;
       return {
         tx_hash: d?.tx_hash,
         signed_tx: d?.signed_tx,
@@ -247,8 +244,9 @@ export class OneClawService extends Service {
     const agentId = this.getAgentId();
     if (!agentId) throw new OneClawAuthError("Agent ID not resolved");
     try {
-      const res = await this.client.signingKeys.list(agentId);
-      return ((res.data as any)?.signing_keys ?? []).map((k: any) => ({
+      // GET /v1/agents/{id}/signing-keys answers { keys: [...] }.
+      const d = this.unwrap(await this.client.signingKeys.list(agentId)) as any;
+      return (d?.keys ?? []).map((k: any) => ({
         chain: k.chain,
         public_key: k.public_key,
         address: k.address,
@@ -280,11 +278,18 @@ export class OneClawService extends Service {
           },
         },
       );
-      const d = res.data ?? res;
+      // { execution_id, status, result: { status, headers, body }, error }
+      const d = this.unwrap(res) as any;
+      if (d?.error && !d?.result) {
+        throw new Error(`execute ${d.status ?? "failed"}: ${d.error}`);
+      }
+      const r = d?.result ?? {};
       return {
-        status_code: d?.status_code ?? d?.statusCode ?? 200,
-        headers: d?.headers,
-        body: d?.body,
+        status_code: r.status ?? r.status_code ?? 0,
+        headers: r.headers,
+        body: r.body,
+        execution_id: d?.execution_id,
+        execution_status: d?.status,
       };
     } catch (err) {
       this.translateError(err);
@@ -299,12 +304,12 @@ export class OneClawService extends Service {
         "GET",
         `/v1/agents/${agentId}/bindings`,
       );
-      const d = res.data ?? res;
+      const d = this.unwrap(res) as any;
       return (d?.bindings ?? []).map((b: any) => ({
         id: b.id,
         name: b.name,
         binding_type: b.binding_type,
-        base_url: b.base_url,
+        base_url: b.config?.base_url ?? b.base_url,
         is_active: b.is_active ?? true,
       }));
     } catch (err) {
@@ -316,8 +321,7 @@ export class OneClawService extends Service {
     const agentId = this.getAgentId();
     if (!agentId) return {};
     try {
-      const res = await this.client.agents.get(agentId);
-      const d = res.data as any;
+      const d = this.unwrap(await this.client.agents.get(agentId)) as any;
       return {
         tx_spent_today: d?.tx_spent_today ?? d?.tx_spent_today_eth,
         tx_daily_limit: d?.tx_daily_limit ?? d?.tx_daily_limit_eth,
@@ -325,6 +329,19 @@ export class OneClawService extends Service {
     } catch {
       return {};
     }
+  }
+
+  /**
+   * The SDK returns `{ data, error, meta }` and does not throw. Turn an error
+   * envelope into a thrown `{ status, message }` so translateError can map it.
+   */
+  private unwrap<T>(res: OneclawResponse<T>): T {
+    if (res.error) {
+      throw Object.assign(new Error(res.error.detail ?? res.error.message), {
+        status: res.meta?.status,
+      });
+    }
+    return res.data as T;
   }
 
   private translateError(err: unknown): never {
